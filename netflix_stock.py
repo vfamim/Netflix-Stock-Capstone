@@ -70,10 +70,28 @@ netflix_stock['Quarter'] = netflix_stock.index.quarter
 djow_stock['Quarter'] = djow_stock.index.quarter
 
 ############################
+# 1.3. FEATURE ENGINEERING
+############################
+
+# earning netflix
+#%%
+group_netflix = netflix_stock.groupby('Quarter')[['Price', 'Volume']].sum()
+group_netflix['EPS'] = group_netflix['Price'] / group_netflix['Price'].sum()
+group_netflix['Diff'] = group_netflix['EPS'].diff().fillna(0)
+print(group_netflix.head())
+
+# earning djow
+#%%
+group_djow = djow_stock.groupby('Quarter')[['Price', 'Volume']].sum()
+group_djow['EPS'] = group_djow['Price'] / group_djow['Price'].sum()
+group_djow['Diff'] = group_djow['EPS'].diff().fillna(0)
+print(group_djow.head())
+
+############################
 # 2.0. DATA ANALYSIS
 ############################
 
-# violinplot
+# Price
 # %%
 sns.violinplot(data=netflix_stock_quartely, x='Quarter', y='Price')
 plt.title('Distribution of 2017 Netflix Stock Prices by Quarter')
@@ -126,3 +144,30 @@ plt.scatter(x_positions, earnings_estimate, color='blue', alpha=0.5)
 plt.legend(['Actual', 'Estimate'])
 plt.xticks(x_positions, chart_labels)
 plt.show()
+
+# comparsion stock price
+#%%
+fig, ax = plt.subplots(nrows=2, ncols=1)
+# netflix stock
+netflix_stock['Price'].plot(ax=ax[0])
+ax[0].set_title('Netflix')
+ax[0].set_xlabel('Date')
+ax[0].set_ylabel('Stock Price')
+
+# djow stock
+djow_stock['Price'].plot(ax=ax[1], color='red')
+ax[1].set_title('Djow')
+ax[1].set_xlabel('Date')
+ax[1].set_ylabel('Stock Price')
+plt.tight_layout()
+plt.show()
+
+# difference percentage
+#%%
+group_netflix['Diff'].plot(marker='o')
+group_djow['Diff'].plot(marker='o')
+plt.xticks(x_positions, chart_labels)
+plt.title('Scaling for Growth')
+plt.legend(['Netflix', 'Djow'])
+plt.show()
+
