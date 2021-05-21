@@ -11,7 +11,8 @@ import pandas as pd
 # data visualization
 import matplotlib.pyplot as plt
 import seaborn as sns
-
+from darkstyle import dark_style as dks 
+dks.dark_style()
 ############################
 # 1.0. DATA
 ############################
